@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Key Management Panel</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 80%;
+            max-width: 800px;
+            margin-top: 20px;
+        }
+        .keyListContainer {
+            justify-content: space-between;
+            align-items: center;
+        }
+        h1 {
+            color: #264a41;
+        }
+        form {
+            background-color: #e8f0f2;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        button {
+            background-color: #264a41;
+            color: white;
+            padding: 10px 15px;
+            margin-bottom: 4px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #015e36;
+        }
+        #keyList {
+            padding-left: 0;
+            margin-left: 0;
+        }
+
+        #keyList li {
+            background-color: #e8f0f2;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        #keyList button {
+            background-color: #264a41;
+            color: white;
+            padding: 5px 10px;
+            margin-left: 1px;
+            margin-right: 1px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        #keyList button:hover {
+            background-color: #015e36;
+        }
+    </style>
+<body>
+<div class="container">
+    <h1>Key management</h1>
+
+    <h2>Create a new key</h2>
+    <form id="createKeyForm">
+        <label for="expiryDays">Amount of days:</label>
+        <input type="number" id="expiryDays" name="expiryDays" required>
+        <button type="submit">Create key</button>
+    </form>
+    
+    <h2>HWID to key binding</h2>
+    <form id="bindHwidForm">
+        <label for="key">Key:</label>
+        <input type="text" id="key" name="key" required><br>
+        <label for="hwid">HWID:</label>
+        <input type="text" id="hwid" name="hwid" required><br>
+        <button type="submit">Bind HWID</button>
+    </form>
+
+    <h2>List of all keys</h2>
+    <div class="keyListContainer">
+        <form id="listForm">
+            <input type="text" id="searchKey" placeholder="Введите данные для поиска">
+            <button onclick="searchByData()">Find</button>
+            <ul id="keyList"></ul>
+        </form>
+    </div>
+        
+    </div>
+</div>
+    <script>
+        function searchByData() {
+            event.preventDefault();
+            var input, filter, ul, li, i, listItemText;
+            input = document.getElementById('searchKey');
+            filter = input.value.toUpperCase();
+            ul = document.getElementById("keyList");
+            li = ul.getElementsByTagName('li');
+            for (i = 0; i < li.length; i++) {
+                listItemText = li[i].textContent || li[i].innerText;
+                if (listItemText.toUpperCase().indexOf(filter) > -1) {
+                    li[i].style.display = "";
+                } else {
+                    li[i].style.display = "none";
+                }
+            }
+        }
+    
+        function toggleKeyState(key, freeze) {
+            var action = freeze ? 'freeze' : 'unfreeze';
+            var formData = new FormData();
+            formData.append('key', key);
+            fetch(action + '_key.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                loadKeyList();
+            }).catch(error => console.error('Error:', error));
+        }
+        
+        window.onload = function() {
+            loadKeyList();
+        };
+
+        function loadKeyList() {
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    const keyList = document.getElementById("keyList");
+                    keyList.innerHTML = xhr.responseText;
+                }
+            };
+            xhr.open("GET", "get_keys.php", true);
+            xhr.send();
+        }
+		
+        document.getElementById("createKeyForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const expiryDays = document.getElementById("expiryDays").value;
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    loadKeyList();
+                }
+            };
+            xhr.open("POST", "create_key.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.send("expiryDays=" + expiryDays);
+        });
+        
+        document.getElementById("bindHwidForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+            const key = document.getElementById("key").value;
+            const hwid = document.getElementById("hwid").value;
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    loadKeyList();
+                }
+            };
+            xhr.open("POST", "bind_hwid.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.send("key=" + key + "&hwid=" + hwid);
+        });
+		
+        document.getElementById("keyList").addEventListener("click", function(event) {
+            const target = event.target;
+            if (target.tagName === "BUTTON") {
+                const key = target.dataset.key;
+                const action = target.dataset.action;
+                if (action === "unbind") {
+                    const xhr = new XMLHttpRequest();
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === 4 && xhr.status === 200) {
+                            loadKeyList();
+                        }
+                    };
+                    xhr.open("POST", "unbind_hwid.php", true);
+                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    xhr.send("key=" + key);
+                } else if (action === "freeze") {
+                    const xhr = new XMLHttpRequest();
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === 4 && xhr.status === 200) {
+                            loadKeyList();
+                        }
+                    };
+                    xhr.open("POST", "freeze_key.php", true);
+                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    xhr.send("key=" + key);
+                } else if (action === "unfreeze") {
+                    const xhr = new XMLHttpRequest();
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === 4 && xhr.status === 200) {
+                            loadKeyList();
+                        }
+                    };
+                    xhr.open("POST", "unfreeze_key.php", true);
+                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    xhr.send("key=" + key);
+                } else if (action === "delete") {
+                    const xhr = new XMLHttpRequest();
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === 4 && xhr.status === 200) {
+                            loadKeyList();
+                        }
+                    };
+                    xhr.open("POST", "delete_key.php", true);
+                    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                    xhr.send("key=" + key);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
