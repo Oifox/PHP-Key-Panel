@@ -33,4 +33,5 @@ Fill these lines with your table data
 
 ### Key verification request
 To send a request to check the existence of a key, we make the following request to your host:
-```https://localhost/check_key.php?key=XXXX-XXXX-XXXX&hwid=DEVICE_ID``` - It sends the **key** and **hwid** in parameters to check for existence in the database
+```https://localhost/check_key.php?key=XXXX-XXXX-XXXX&hwid=DEVICE_ID```
+It sends the **key** and **hwid** in parameters to check for existence in the database
