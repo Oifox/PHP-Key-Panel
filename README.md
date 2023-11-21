@@ -1,6 +1,7 @@
 # PHP-Key-Panel
 Key control panel written in HTML, CSS, JS, PHP
 __Our panel has many functions, creating a key, binding a unique identifier (HWID), unbinding HWID, freezing / unfreezing keys, as well as deleting them. The panel is equipped with a convenient and intuitive interface.__
+![Снимок экрана (5272)](https://github.com/Oifox/PHP-Key-Panel/assets/77205519/67370c4c-162f-4f35-81d2-3c63ee024a6e)
 
 ## Get started
 You will need access to the server and MySQL, so we download all the files from the repository and copy to your server
@@ -19,7 +20,7 @@ CREATE TABLE new_table_name (
 );
 ```
 The structure should look something like this:
-![image](https://github.com/Oifox/PHP-Key-Panel/assets/77205519/7719432d-db21-4b04-a0b3-e3a7fddb1dc0)
+![photo_2023-11-21_17-26-16](https://github.com/Oifox/PHP-Key-Panel/assets/77205519/1edb8c97-3dff-418c-a83d-610f9684ab83)
 
 ### PHP MySQL connection
 Open the **db_config.php** file and see the configuration lines for connecting the database:
