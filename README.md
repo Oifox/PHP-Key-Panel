@@ -2,9 +2,9 @@
 Key control panel written in HTML, CSS, JS, PHP
 __Our panel has many functions, creating a key, binding a unique identifier (HWID), unbinding HWID, freezing / unfreezing keys, as well as deleting them. The panel is equipped with a convenient and intuitive interface.__
 
-##Get started
+## Get started
 You will need access to the server and MySQL, so we download all the files from the repository and copy to your server
-###MySQL setup
+### MySQL setup
 Go to your database, go to the **SQL** tab and enter this command, then click **Go** at the bottom of the page and your structure will be ready.
 ```sql
 CREATE TABLE new_table_name (
@@ -21,7 +21,7 @@ CREATE TABLE new_table_name (
 The structure should look something like this:
 ![image](https://github.com/Oifox/PHP-Key-Panel/assets/77205519/7719432d-db21-4b04-a0b3-e3a7fddb1dc0)
 
-###PHP MySQL connection
+### PHP MySQL connection
 Open the **db_config.php** file and see the configuration lines for connecting the database:
 ~~~php
 $servername = "localhost";
@@ -31,6 +31,6 @@ $dbname = "your_dbname";
 ~~~
 Fill these lines with your table data
 
-###Key verification request
+### Key verification request
 To send a request to check the existence of a key, we make the following request to your host:
 ```https://localhost/check_key.php?key=XXXX-XXXX-XXXX&hwid=DEVICE_ID``` - It sends the **key** and **hwid** in parameters to check for existence in the database
