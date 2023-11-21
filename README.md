@@ -1,7 +1,8 @@
 # PHP-Key-Panel
 Key control panel written in HTML, CSS, JS, PHP
 __Our panel has many functions, creating a key, binding a unique identifier (HWID), unbinding HWID, freezing / unfreezing keys, as well as deleting them. The panel is equipped with a convenient and intuitive interface.__
-![Снимок экрана (5272)](https://github.com/Oifox/PHP-Key-Panel/assets/77205519/67370c4c-162f-4f35-81d2-3c63ee024a6e)
+![Снимок экрана (5273)](https://github.com/Oifox/PHP-Key-Panel/assets/77205519/528db2ed-4fee-42ed-b684-5212b1ebc332)
+
 
 ## Get started
 You will need access to the server and MySQL, so we download all the files from the repository and copy to your server
