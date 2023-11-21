@@ -27,11 +27,11 @@ if ($result->num_rows > 0) {
             echo "<button data-key='$key' data-action='unbind'>Unbind HWID</button>";
         }
         if ($frozen) {
-            echo "<button onclick='toggleKeyState(\"$key\", false)'>Разморозить</button>";
+            echo "<button onclick='toggleKeyState(\"$key\", false)'>Unfreeze</button>";
         } else {
-            echo "<button onclick='toggleKeyState(\"$key\", true)'>Заморозить</button>";
+            echo "<button onclick='toggleKeyState(\"$key\", true)'>Freeze</button>";
         }
-        echo "<button data-key='$key' data-action='delete'>Удалить</button>";
+        echo "<button data-key='$key' data-action='delete'>Delete</button>";
         
         echo "</li>";
     }
